@@ -7,6 +7,8 @@ import ptBR  from "date-fns/locale/pt-BR";
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
 
 import styles from './home.module.scss'
+import { PlayerContext } from "../contexts/PlayerContext";
+import { useContext } from "react";
 
 type Episode = {
   id: string;
@@ -33,6 +35,8 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
   //   )
   // }, [])
 
+  const {play} = useContext(PlayerContext)
+
   return (
     <div className={styles.homepage}>
       <section className={styles.latestEpisodes}>
@@ -57,8 +61,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
                   <span>{episode.publishedAt}</span>
                   <span>{episode.durationAsString}</span>    
                 </div>
-
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <img src="/play-green.svg" alt="Tocar epiódio"/>
                 </button>
               </li>
@@ -102,7 +105,7 @@ export default function Home({latestEpisodes, allEpisodes}: HomeProps) {
                   <td style={{width: 100}}>{episode.publishedAt}</td>
                   <td>{episode.durationAsString}</td>
                   <td>
-                    <button type='button'>
+                    <button type='button' onClick={() => play(episode)}>
                       <img src="/play-green.svg" alt="Tocar epiódio"/>
                     </button>
                   </td>
@@ -144,7 +147,6 @@ export const getStaticProps: GetStaticProps = async () => {
   })  
 
   const episodes = data.map(episode => {
-    console.log(episode);
     
     return{
       id: episode.id,
